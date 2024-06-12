@@ -1,0 +1,54 @@
+CREATE TABLE Usuarios (
+    UsuarioID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(50),
+    Apellido VARCHAR(50),
+    Email VARCHAR(100) UNIQUE,
+    Contraseña VARCHAR(255),
+    Teléfono VARCHAR(20),
+    FechaCreacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UltimoInicioSesion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Vehiculos (
+    VehiculoID INT AUTO_INCREMENT PRIMARY KEY,
+    tipo VARCHAR(50),
+    Capacidad INT
+);
+
+CREATE TABLE Rutas (
+    RutaID INT AUTO_INCREMENT PRIMARY KEY,
+    EstacionOrigenID INT,
+    EstacionDestinoID INT,
+    Duracion INT,
+    Precio DECIMAL(10, 2),
+    FOREIGN KEY (EstacionOrigenID) REFERENCES Estaciones(EstacionID),
+    FOREIGN KEY (EstacionDestinoID) REFERENCES Estaciones(EstacionID)
+);
+
+CREATE TABLE Viajes (
+    ViajeID INT AUTO_INCREMENT PRIMARY KEY,
+    RutaID INT,
+    VehiculoID INT,
+    FechaSalida DATETIME,
+    FechaLlegada DATETIME,
+    FOREIGN KEY (RutaID) REFERENCES Rutas(RutaID),
+    FOREIGN KEY (VehiculoID) REFERENCES Vehiculos(VehiculoID)
+);
+
+CREATE TABLE Pasajes (
+    PasajeID INT AUTO_INCREMENT PRIMARY KEY,
+    ViajeID INT,
+    Clase VARCHAR(50),
+    Precio DECIMAL(10, 2),
+    FOREIGN KEY (ViajeID) REFERENCES Viajes(ViajeID)
+);
+
+CREATE TABLE Reservas (
+    ReservaID INT AUTO_INCREMENT PRIMARY KEY,
+    UsuarioID INT,
+    PasajeID INT,
+    FechaReserva DATETIME,
+    Estado VARCHAR(50),
+    FOREIGN KEY (UsuarioID) REFERENCES Usuarios(UsuarioID),
+    FOREIGN KEY (PasajeID) REFERENCES Pasajes(PasajeID)
+);
